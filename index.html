@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Admin Panel</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  padding:0;
+  background: linear-gradient(135deg,#e0f2fe,#ffffff);
+}
+
+
+body{
+  background: linear-gradient(135deg,#e0f2fe,#ffffff);
+}
+
+.login-wrapper{
+  display:flex;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg,#e0f2fe,#ffffff);
+}
+
+.login-box{
+  width:300px;
+  padding:30px 25px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  border-radius:20px;
+
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+}
+
+.main-bg{
+  min-height:100vh;
+  background: linear-gradient(135deg,#e0f2fe,#ffffff);
+}
+
+.login-box h2{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+  color:#1e3a8a;
+  letter-spacing:1px;
+}
+
+.subtitle{
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:20px;
+}
+
+.login-box input{
+  width:100%;
+  max-width:260px;
+  margin-bottom:12px;
+  padding:11px 14px;
+
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.4);
+
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+
+  font-size:14px;
+
+  transition: all 0.25s ease;
+}
+
+.login-box input:focus{
+  border: 1px solid #3b82f6 !important;
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,0.25),
+    0 0 25px rgba(59,130,246,0.6),
+    inset 0 0 5px rgba(59,130,246,0.2);
+
+  transform: scale(1.02);
+}
+
+.login-btn{
+  width:100%;
+  max-width:260px;
+  margin-top:10px;
+  padding:11px;
+
+  border:none;
+  border-radius:12px;
+
+  font-weight:600;
+  color:white;
+
+  background: linear-gradient(135deg,#2563eb,#60a5fa);
+  box-shadow: 0 6px 15px rgba(37,99,235,0.25);
+
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.login-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37,99,235,0.35);
+}
+
+.cardchip.total {
+  border-left: 4px solid #3b82f6;
+  background: rgba(255,255,255,0.8);
+}
+
+.header{
+  position: relative;
+  padding: 22px 20px;
+  text-align: center;
+
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  color: white;
+
+  background: linear-gradient(135deg,#3b82f6,#60a5fa);
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+
+  border-radius: 0 0 20px 20px;
+
+  box-shadow:
+  0 6px 18px rgba(59,130,246,0.25),
+  inset 0 -1px 6px rgba(255,255,255,0.15);
+
+  overflow: hidden;
+
+  margin-bottom: 16px;
+}
+
+.header::after{
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -30%;
+  width: 160%;
+  height: 160%;
+
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  opacity: 0.3;
+}
+
+.header::before{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.7);
+}
+
+#searchInput {
+  border: 1px solid rgba(148,163,184,0.4);
+  border-left: 6px solid #3b82f6;
+  border-right: 6px solid #3b82f6;
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: 0.2s;
+}
+
+#searchInput:focus {
+  border-left-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+.toast {
+  visibility: hidden;
+  min-width: 220px;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 12px 16px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-family: Arial;
+  opacity: 0;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+  bottom: 50px;
+}
+
+.toast.success { background: #2563eb; }
+.toast.warning { background: #f59e0b; }
+.toast.danger  { background: #dc2626; }
+.toast.info    { background: #111827; }
+.topbar-row:first-child{
+  padding: 0 12px;
+}
+
+input, select{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.4);
+  outline:none;
+  font-size:14px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  color:#0f172a;
+  transition:0.2s;
+  cursor:pointer;
+}
+
+
+input:focus, select:focus{
+  border-color:#3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.topbar-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  align-items:center;
+}
+
+/* tombol dark & refresh biar ga aneh */
+.btn-dark{
+  padding:10px 14px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  color:white;
+  background: linear-gradient(135deg,#2563eb,#60a5fa);
+  box-shadow: 0 6px 15px rgba(37,99,235,0.25);
+}
+.btn-dark:hover{
+  box-shadow: 0 10px 25px rgba(37,99,235,0.35);
+  transform: translateY(-2px);
+}
+
+.btn-refresh{
+  padding:10px 14px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  color:white;
+  background: linear-gradient(135deg,#ec4899,#f472b6);
+  box-shadow: 0 6px 15px rgba(236,72,153,0.25);
+}
+.btn-refresh:hover{
+  box-shadow: 0 10px 25px rgba(236,72,153,0.35);
+  transform: translateY(-2px);
+}
+
+.dash{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
+  margin:16px auto;
+  max-width:500px;
+  padding:0 10px;
+}
+
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* ACTIVE */
+.badge.active {
+  background: #22c55e;
+  color: white;
+}
+
+/* PENDING */
+.badge.pending {
+  background: #f59e0b;
+  color: white;
+}
+
+.badge.expired {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 0 10px rgba(239,68,68,0.4);
+}
+
+.badge.banned {
+  background: #dc2626;
+  color: white;
+  box-shadow: 0 0 12px rgba(220,38,38,0.6);
+}
+
+.cardchip{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 14px;
+  min-width:140px;
+  background: rgba(255,255,255,0.8);
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.07);
+  font-weight:600;
+}
+
+.cardchip.active { border-left:4px solid #22c55e; }
+.cardchip.pending {
+  border-left:4px solid #f59e0b;
+  background: rgba(255,255,255,0.8);
+}
+.cardchip.expired { border-left:4px solid #ef4444; }
+
+.users-grid{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.broadcast-actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+.loading{
+  display:none;
+  text-align:center;
+  padding:10px;
+  font-weight:600;
+  color:#3b82f6;
+}
+
+.loading::after{
+  content:"";
+  display:inline-block;
+  width:14px;
+  height:14px;
+  margin-left:8px;
+  border:2px solid #3b82f6;
+  border-top:2px solid transparent;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+.user-card{
+  position: relative;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-radius: 18px;
+  padding: 16px 16px 16px 18px;
+
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+
+  overflow: hidden;
+
+  border-left: 6px solid #3b82f6;
+}
+
+.broadcast-box{
+  margin:20px auto;
+  padding:16px;
+
+  max-width:420px;
+  width:90%;
+
+  border-radius:18px;
+
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(18px);
+
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.broadcast-box input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.4);
+  box-sizing:border-box;
+  text-align:center;
+}
+
+.broadcast-box textarea{
+  width:100%;
+  min-height:90px;
+
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,0.4);
+
+  resize:none;
+  outline:none;
+
+  font-size:14px;
+
+  text-align:center;
+  box-sizing:border-box;
+}
+
+.broadcast-box h3{
+  text-align:center;
+  margin:0;
+  font-size:15px;
+  color:#2563eb;
+}
+
+.broadcast-box button{
+  align-self:center;
+  padding:10px 18px;
+}
+
+body.dark{
+  background:#0f172a;
+  color:#e2e8f0;
+}
+
+body.dark .user-card,
+body.dark .cardchip,
+body.dark input,
+body.dark select{
+  background: rgba(30,41,59,0.7);
+  color:#e2e8f0;
+  border-color:#334155;
+}
+
+.badge-expired{
+  background:#ef4444;
+  color:white;
+  font-weight:bold;
+  padding:4px 10px;
+  border-radius:8px;
+  font-size:12px;
+  display:inline-block;
+  margin-bottom:8px;
+}
+
+.user-card th, .user-card td{
+  padding:6px 4px;
+  text-align:left;
+}
+
+.user-card th{
+  width:110px;
+  font-weight:600;
+  text-align:left;
+  white-space:nowrap;
+}
+
+.user-card td{
+  padding-left:10px;
+  text-align:left;
+  width:100%;
+}
+
+.user-card table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.user-card td{
+  padding-left:6px;
+}
+
+.action-btn{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+button{
+  border:none;
+  padding:9px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  color:white;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  letter-spacing: 0.2px;
+}
+
+/* hover global */
+button:hover{
+  transform: translateY(-2px);
+  opacity: 0.95;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.approve{
+  background: linear-gradient(135deg,#3b82f6,#60a5fa);
+}
+.approve:hover{
+  box-shadow: 0 10px 25px rgba(59,130,246,0.35);
+}
+
+.pending{
+  background: linear-gradient(135deg,#f59e0b,#fbbf24);
+}
+.pending:hover{
+  box-shadow: 0 10px 25px rgba(245,158,11,0.35);
+}
+
+.banned{
+  background: linear-gradient(135deg,#dc2626,#ef4444);
+}
+.banned:hover{
+  box-shadow: 0 10px 25px rgba(220,38,38,0.35);
+}
+
+.delete{
+  background: linear-gradient(135deg,#111827,#374151);
+}
+.delete:hover{
+  box-shadow: 0 10px 25px rgba(17,24,39,0.4);
+}
+
+/* STATUS = BIRU */
+.filter-status {
+  background: linear-gradient(135deg,#2563eb,#60a5fa);
+  color: white;
+  border: none;
+
+  background-image:
+    linear-gradient(135deg,#2563eb,#60a5fa),
+    linear-gradient(45deg, transparent 50%, white 50%),
+    linear-gradient(135deg, white 50%, transparent 50%);
+
+  background-position:
+    0 0,
+    calc(100% - 18px) calc(1em + 2px),
+    calc(100% - 13px) calc(1em + 2px);
+
+  background-size:
+    100% 100%,
+    5px 5px,
+    5px 5px;
+
+  background-repeat: no-repeat;
+}
+
+.filter-paket {
+  background: linear-gradient(135deg,#ec4899,#f472b6);
+  color: white;
+  border: none;
+
+  background-image:
+    linear-gradient(135deg,#ec4899,#f472b6),
+    linear-gradient(45deg, transparent 50%, white 50%),
+    linear-gradient(135deg, white 50%, transparent 50%);
+
+  background-position:
+    0 0,
+    calc(100% - 18px) calc(1em + 2px),
+    calc(100% - 13px) calc(1em + 2px);
+
+  background-size:
+    100% 100%,
+    5px 5px,
+    5px 5px;
+
+  background-repeat: no-repeat;
+}
+
+.search-full{
+  width:100%;
+  text-align:center;
+  font-size:15px;
+}
+
+.menu-row{
+  justify-content:center;
+}
+
+.users-grid{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding: 0 12px;
+}
+
+.container{
+  max-width: 500px;
+  margin: auto;
+}
+
+.info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.row span{
+  font-weight:600;
+  color:#64748b;
+  min-width:120px;
+}
+
+.row b{
+  text-align:right;
+  flex:1;
+}
+
+body.dark{
+  background:#0f172a !important;
+}
+
+/* background utama */
+body.dark .main-bg,
+body.dark .login-wrapper{
+  background:#0f172a !important;
+}
+
+body.dark .header{
+  background: linear-gradient(135deg,#1e293b,#0f172a);
+  color:#e2e8f0;
+}
+
+body.dark .login-box,
+body.dark .broadcast-box{
+  background: rgba(30,41,59,0.9);
+  color:#e2e8f0;
+}
+
+body.dark h2,
+body.dark h3,
+body.dark b,
+body.dark span{
+  color:#e2e8f0;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+  background: rgba(15,23,42,0.8);
+  color:#e2e8f0;
+  border-color:#334155;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#94a3b8;
+}
+
+body.dark .user-card{
+  background: rgba(30,41,59,0.9);
+  border-left: 6px solid #3b82f6;
+}
+
+body.dark .cardchip{
+  background: rgba(30,41,59,0.9);
+  color:#e2e8f0;
+}
+
+
+body.dark .toast.info{
+  background:#1e293b;
+}
+
+body.dark .header::after{
+  opacity: 0.1;
+}
+</style>
+</head>
+<body>
+<div id="loginPage" class="login-wrapper">
+  <div class="login-box">
+
+    <h2>SUPER ADMIN</h2>
+    <p class="subtitle">Login to continue</p>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()" class="login-btn">Login</button>
+
+  </div>
+</div>
+
+<div id="mainApp" class="main-bg" style="display:none;">
+  <div class="header">SUPER ADMIN PANEL</div>
+<div class="container">
+<div class="topbar">
+
+
+  <!-- ROW 1 -->
+<!-- SEARCH FULL -->
+<div class="topbar-row">
+  <input id="searchInput" class="search-full" placeholder="Search device_id..." onkeyup="loadData()">
+</div>
+
+<!-- MENU BAWAH -->
+<div class="topbar-row menu-row">
+  <select id="filterStatus" class="filter-status" onchange="loadData()">
+    <option value="">All Status</option>
+    <option value="active">Active</option>
+    <option value="pending">Pending</option>
+    <option value="expired">Expired</option>
+    <option value="banned">Banned</option>
+  </select>
+
+  <select id="filterPaket" class="filter-paket" onchange="loadData()">
+    <option value="">All Paket</option>
+    <option value="3day">3 Day</option>
+    <option value="7day">7 Day</option>
+    <option value="14day">14 Day</option>
+    <option value="30day">30 Day</option>
+  </select>
+
+  <button onclick="toggleDark()" class="btn-dark">DarkMode</button>
+  <button onclick="refreshData()" class="btn-refresh">Refresh</button>
+</div>
+
+
+
+<!-- BUTTON TOGGLE -->
+<div class="topbar-row broadcast-actions">
+  <button onclick="toggleBroadcast()" class="btn-dark">Broadcast</button>
+  <button onclick="toggleHistory()" class="btn-refresh">History</button>
+  <button onclick="logout()" class="btn-dark">Logout</button>
+</div>
+
+
+<!-- BROADCAST FORM (HIDDEN) -->
+<div id="broadcastBox" class="broadcast-box" style="display:none;">
+  <h3>Tittle Broadcast</h3>
+
+  <input id="broadcastTitle" placeholder="Judul broadcast..." />
+  <textarea id="broadcastMsg" placeholder="Tulis pesan ke semua user..."></textarea>
+
+  <button onclick="sendBroadcast()" class="btn-refresh">Kirim Broadcast</button>
+</div>
+
+<!-- HISTORY (SIMPLE PLACEHOLDER DULU) -->
+<div id="historyBox" class="broadcast-box" style="display:none;">
+  <h3>History Broadcast</h3>
+  <div id="historyList" style="font-size:13px; text-align:center; color:#64748b;">
+    Belum ada data
+  </div>
+</div>
+
+  <div class="dash">
+    <div class="cardchip active">Active <b id="c_active">0</b></div>
+    <div class="cardchip pending">Pending <b id="c_pending">0</b></div>
+    <div class="cardchip expired">Expired <b id="c_expired">0</b></div>
+    <div class="cardchip total">Total User <b id="c_total">0</b></div>
+  </div>
+  
+<div id="loading" class="loading">Loading users</div>
+
+<div class="users-grid" id="usersGrid"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+const SUPABASE_URL = "https://begtkgonnxugpppdvdec.supabase.co";
+const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlZ3RrZ29ubnh1Z3BwcGR2ZGVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDA4OTQsImV4cCI6MjA5MjAxNjg5NH0.0V_t4xVN0D5ASVAaxaL7v-4VwrL-yTfUouEEckyYPqU";
+const TABLE = "LockApp";
+
+function formatDate(ts){
+  if(!ts) return "-";
+  ts = Number(ts);
+  if(ts < 10000000000) ts *= 1000;
+  return new Date(ts).toLocaleString("id-ID");
+}
+
+async function loadData(){
+  const loadingEl = document.getElementById("loading");
+  loadingEl.style.display = "block"; // tampilkan spinner
+
+  const search = document.getElementById("searchInput").value;
+  const status = document.getElementById("filterStatus").value;
+  const paket = document.getElementById("filterPaket").value;
+
+  let url = `${SUPABASE_URL}/rest/v1/${TABLE}?select=*`;
+  if(search) url += `&device_id=ilike.*${search}*`;
+  if(status && status !== "total") url += `&status=eq.${status}`;
+  if(paket) url += `&paket=eq.${paket}`;
+
+  const res = await fetch(url,{
+    headers:{
+      "apikey":API_KEY,
+      "Authorization":"Bearer "+API_KEY
+    }
+  });
+
+  const rows = await res.json();
+
+  let html = "";
+  let active=0, pending=0, expired=0;
+
+  rows.forEach(d=>{
+    if(d.status==="active") active++;
+    else if(d.status==="pending") pending++;
+    else if(d.status==="expired") expired++;
+
+    let exp = Number(d.expired_at);
+    if(exp < 10000000000) exp *= 1000;
+    const isExpired = exp < Date.now();
+
+    html += `
+      <div class="user-card ${isExpired ? 'expired-row' : ''}">
+        ${isExpired ? '<div class="badge-expired">EXPIRED</div>' : ''}
+        <table>
+<div class="info">
+  <div class="row">
+    <span>Device ID</span>
+    <b>${d.device_id}</b>
+  </div>
+
+  <div class="row">
+    <span>Paket</span>
+    <b>${d.paket || '-'}</b>
+  </div>
+
+  <div class="row">
+    <span>Status</span>
+    <b><span class="badge ${d.status}">${d.status.toUpperCase()}</span></b>
+  </div>
+
+  <div class="row">
+    <span>Created</span>
+    <b>${formatDate(d.created_at)}</b>
+  </div>
+
+  <div class="row">
+    <span>Expired</span>
+    <b>
+      <span class="badge ${isExpired ? 'expired' : 'active'}">
+        ${formatDate(d.expired_at)}
+      </span>
+    </b>
+  </div>
+</div>
+        </table>
+        <div class="action-btn">
+          <button class="approve" onclick="setStatus('${d.device_id}','active')">Approve</button>
+          <button class="pending" onclick="setStatus('${d.device_id}','pending')">Pending</button>
+          <button class="banned" onclick="setStatus('${d.device_id}','banned')">Banned</button>
+          <button class="delete" onclick="deleteData('${d.device_id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("usersGrid").innerHTML = html;
+  document.getElementById("c_active").innerText = active;
+  document.getElementById("c_pending").innerText = pending;
+  document.getElementById("c_expired").innerText = expired;
+  document.getElementById("c_total").innerText = rows.length;
+
+  loadingEl.style.display = "none"; // sembunyikan spinner
+}
+
+
+async function deleteData(device){
+  if(!confirm("Yakin mau delete data ini?")) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?device_id=eq.${device}`,{
+    method:"DELETE",
+    headers:{
+      "apikey":API_KEY,
+      "Authorization":"Bearer "+API_KEY
+    }
+  });
+  loadData();
+}
+
+loadData();
+setInterval(loadData,5000);
+
+function showToast(message, type = "info", duration = 2000) {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.className = "toast " + type + " show";
+
+  setTimeout(() => {
+    toast.className = "toast";
+  }, duration);
+}
+
+async function setStatus(device,status){
+  await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?device_id=eq.${device}`,{
+    method:"PATCH",
+    headers:{
+      "apikey":API_KEY,
+      "Authorization":"Bearer "+API_KEY,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({status})
+  });
+
+  let msg = "";
+  let type = "";
+
+  if(status === "active"){
+    msg = "Approved Success!";
+    type = "success";
+  } else if(status === "pending"){
+    msg = "Moved to Pending!";
+    type = "warning";
+  } else if(status === "banned"){
+    msg = "User Banned!";
+    type = "danger";
+  }
+
+  showToast(msg, type);
+  loadData();
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+
+  const isDark = document.body.classList.contains("dark");
+
+  showToast(
+    isDark ? "Dark Mode ON" : "Dark Mode OFF",
+    "info"
+  );
+}
+
+function refreshData(){
+  loadData();
+  showToast("Data refreshed", "success");
+}
+
+const ADMIN_USER = "Stefanus";
+const ADMIN_PASS = "Ts122588";
+
+function login(){
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+
+  if(u === ADMIN_USER && p === ADMIN_PASS){
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+
+    showToast("Login Success", "success");
+
+    localStorage.setItem("isLogin","true");
+  }else{
+    showToast("Login Failed", "danger");
+  }
+}
+
+window.onload = function(){
+  if(localStorage.getItem("isLogin") === "true"){
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+  }
+}
+
+function logout(){
+  localStorage.removeItem("isLogin");
+  location.reload();
+}
+
+async function sendBroadcast(){
+  const title = document.getElementById("broadcastTitle").value;
+  const msg = document.getElementById("broadcastMsg").value;
+
+  if(!title || !msg){
+    showToast("Judul & pesan wajib!", "warning");
+    return;
+  }
+
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/broadcast`,{
+      method:"POST",
+      headers:{
+        "apikey":API_KEY,
+        "Authorization":"Bearer "+API_KEY,
+        "Content-Type":"application/json",
+        "Prefer":"return=representation"
+      },
+      body:JSON.stringify({
+        title: title,
+        message: msg
+      })
+    });
+
+    const text = await res.text();
+    console.log("RESPONSE:", res.status, text);
+
+    if(res.ok){
+      showToast("Broadcast terkirim!", "success");
+      document.getElementById("broadcastTitle").value = "";
+      document.getElementById("broadcastMsg").value = "";
+    }else{
+      showToast("ERROR: "+text, "danger", 4000);
+    }
+
+  }catch(e){
+    showToast("FETCH ERROR: "+e.message, "danger", 4000);
+  }
+}
+
+function toggleBroadcast(){
+  const box = document.getElementById("broadcastBox");
+  const history = document.getElementById("historyBox");
+
+  history.style.display = "none";
+
+  box.style.display = (box.style.display === "none") ? "flex" : "none";
+}
+
+function toggleHistory(){
+  const box = document.getElementById("broadcastBox");
+  const history = document.getElementById("historyBox");
+
+  box.style.display = "none";
+
+  history.style.display = (history.style.display === "none") ? "flex" : "none";
+
+  loadHistory();
+}
+
+async function loadHistory(){
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/broadcast?select=*&order=created_at.desc&limit=5`,{
+    headers:{
+      "apikey":API_KEY,
+      "Authorization":"Bearer "+API_KEY
+    }
+  });
+
+  const data = await res.json();
+
+  let html = "";
+
+  data.forEach(d=>{
+    html += `
+      <div style="
+        margin-bottom:10px;
+        padding:12px;
+        background:#f1f5f9;
+        border-radius:12px;
+        text-align:left;
+        position:relative;
+      ">
+        <b>${d.title}</b><br>
+        <span style="font-size:12px; color:#64748b;">${d.message}</span>
+
+        <button onclick="deleteBroadcast('${d.id}')" 
+          style="
+            position:absolute;
+            top:10px;
+            right:10px;
+            padding:4px 8px;
+            font-size:11px;
+            background:#ef4444;
+            border-radius:6px;
+          ">
+          Hapus
+        </button>
+      </div>
+    `;
+  });
+
+  document.getElementById("historyList").innerHTML = html || "Belum ada data";
+}
+
+async function deleteBroadcast(id){
+  if(!confirm("Hapus broadcast ini?")) return;
+
+  await fetch(`${SUPABASE_URL}/rest/v1/broadcast?id=eq.${id}`,{
+    method:"DELETE",
+    headers:{
+      "apikey":API_KEY,
+      "Authorization":"Bearer "+API_KEY
+    }
+  });
+
+  showToast("Broadcast dihapus", "danger");
+  loadHistory();
+}
+</script>
+</div>
+</body>
+</html>
